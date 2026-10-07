@@ -1,0 +1,24 @@
+# Launch agents by declaring them. Apply with:
+#   LAUNCHPAD_CONFIG=agents.example.yaml uv run uvicorn launchpad.api:app
+#   uv run launchpad apply agents.example.yaml     # against a running platform
+agents:
+  - name: greeter
+    runtime: echo
+    prefix: "hi "
+
+  - name: researcher
+    runtime: langchain_react          # needs ANTHROPIC_API_KEY
+    model:
+      name: claude-opus-5
+      # provider: openai            # any init_chat_model provider
+      # base_url: http://localhost:8000/v1   # vLLM / LiteLLM / a private gateway
+    tools: [http_get, utc_now]
+    system_prompt: Answer with sources. Be terse.
+    limits:
+      timeout_s: 120
+      max_iterations: 8
+
+  - name: churn-scorer
+    runtime: databricks_mlflow        # needs DATABRICKS_HOST + DATABRICKS_TOKEN
+    endpoint: churn-model
+    mode: raw

@@ -1,0 +1,41 @@
+[project]
+name = "launchpad"
+version = "0.1.0"
+description = "Config-driven enterprise agent platform"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "httpx>=0.28.1",
+    "pydantic>=2.9",
+    "pyyaml>=6.0.3",
+    "uvicorn[standard]>=0.32",
+]
+
+[project.scripts]
+launchpad = "launchpad_cli:main"
+
+[project.optional-dependencies]
+langchain = [
+    "langchain>=0.3",
+    "langgraph>=0.2",
+    "langchain-anthropic>=0.3",
+    "langchain-openai>=0.2",
+    "langgraph-checkpoint-sqlite>=2.0",
+]
+databricks = ["databricks-langchain>=0.4", "httpx>=0.27"]
+
+[dependency-groups]
+dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.7"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["launchpad", "launchpad_cli"]
